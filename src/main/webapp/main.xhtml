@@ -94,6 +94,7 @@
                             <h:column>
                                 <h:commandLink value="#{track.trackName}" action="#{playlistBean.addToPlaylist}" class="navigation-link-small">
                                     <f:param name="trackId" value="#{track.id}"/>
+                                    <f:param name="trackName" value="#{track.trackName}" />
                                     <f:ajax execute="@this" render=":playlistForm:playlist" />
                                 </h:commandLink>
                             </h:column>
@@ -119,10 +120,9 @@
                     <h:dataTable value="#{trackListBean.tracks}" var="track" border="0">                             
                         <h:column>
                             <h:commandLink value="#{track.trackName}" action="#{playlistBean.addToPlaylist}" class="navigation-link-small">
-                                <!-- action = add to playlist -->
                                 <f:param name="trackId" value="#{track.id}" />
                                 <f:param name="trackName" value="#{track.trackName}" />
-                                <!-- ajax render playlist div -->
+                                <f:ajax execute="@this" render=":playlistForm:playlist" />
                             </h:commandLink>
                         </h:column>                                                 
                     </h:dataTable>
@@ -150,10 +150,9 @@
                     <h:dataTable value="#{trackListBean.tracks}" var="track" border="0">                             
                         <h:column>
                             <h:commandLink value="#{track.trackName}" action="#{playlistBean.addToPlaylist}" class="navigation-link-small">
-                                <!-- action = add to playlist -->
                                 <f:param name="trackId" value="#{track.id}" />
                                 <f:param name="trackName" value="#{track.trackName}" />
-                                <!-- ajax render playlist div -->
+                                <f:ajax execute="@this" render=":playlistForm:playlist" />
                             </h:commandLink>
                         </h:column>                                                 
                     </h:dataTable>
