@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f = "http://java.sun.com/jsf/core"
+    xmlns:h = "http://java.sun.com/jsf/html"
+    xmlns:ui = "http://xmlns.jcp.org/jsf/facelets"
+    xmlns:c = "jakarta.tags.core">
+
+    <h:panelGroup id="playlist">
+        <table>
+            <tr><td height="6">&nbsp;</td></tr>
+        </table>
+
+        <table class="navigation-link-small">
+            <table>
+                <tr>
+                    <td class="list-header">Playing Now</td>
+                </tr>
+            </table>
+            <h:dataTable value="#{playlistBean.getNowPlaying()}" var="t" border="0">                             
+                <h:column>
+                    <h:commandLink value="" action="#{playlistBean.stop()}">                            
+                        <img src="stop.jpg" width="12" height="12" border="0"/>
+                        <f:ajax execute="@this" render="playlist" />
+                    </h:commandLink>
+                    <c:if test="#{!playlistBean.paused}">
+                        <h:commandLink value="" action="#{playlistBean.pause()}">
+                            <img src="pause.jpg" width="12" height="12" border="0"/>
+                            <f:ajax execute="@this" render="playlist" />                                                 
+                        </h:commandLink>
+                    </c:if>
+                    <c:if test="#{playlistBean.paused}">
+                        <h:commandLink value="" action="#{playlistBean.play()}">
+                            <img src="play.jpg" width="12" height="12" border="0"/>
+                            <f:ajax execute="@this" render="playlist" />                                                 
+                        </h:commandLink>
+                    </c:if>
+                    &nbsp;
+                    <h:outputText value="#{t.track.trackName}" class="track-owner"/>
+                </h:column>                                                 
+            </h:dataTable>
+            <table>
+                <tr>
+                    <td class="list-header">Queued</td>
+                </tr>
+            </table>
+            <h:dataTable value="#{playlistBean.getQueued()}" var="t" border="0">                         
+                <h:column>
+                    <h:commandLink value="" action="#{playlistBean.cancel()}">
+                        <img src="cancel.jpg" width="12" height="12" border="0"/>
+                        <f:param name="requestId" value="#{t.requestId}"/>                          
+                        <f:ajax execute="@this" render="playlist" />                                                 
+                    </h:commandLink>
+                    &nbsp;
+                    <h:outputText value="#{t.track.trackName}" class="track-owner"/>
+                </h:column>                                                 
+            </h:dataTable>
+
+            <h:commandButton id="hiddenRefreshBtn" binding="#{playlistBean.hiddenButton}" type="button" style="display:none;">
+                <f:ajax event="click" render="playlist" />
+            </h:commandButton>
+        </table>
+    </h:panelGroup>
+</ui:composition>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns = "http://www.w3.org/1999/xhtml"
+                xmlns:f = "http://java.sun.com/jsf/core"
+                xmlns:h = "http://java.sun.com/jsf/html"
+                xmlns:ui = "http://xmlns.jcp.org/jsf/facelets"
+                xmlns:c = "jakarta.tags.core">
+
+    <f:view>  
+        <h:panelGroup id="menu" >
+            <h:form>
+                <table align="left">
+                    <c:if test="#{!sessionBean.loggedIn}">
+                        <tr>
+                            <td>                            
+                                <h:commandLink action="#{sessionBean.login()}" value="Login" class="navigation-link-large">
+                                    <f:ajax execute="@this" render="menu" />
+                                </h:commandLink>
+                            </td>
+                        </tr>
+                    </c:if>
+                    <c:if test="#{sessionBean.loggedIn}">
+                        <tr>
+                            <td>
+                                <h:commandLink action="#{loaderBean.startLoad()}" value="Load" class="navigation-link-large">
+                                    <f:ajax execute="@this" render="menu" />
+                                </h:commandLink>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <h:commandLink action="#{sessionBean.logout()}" value="Logout" class="navigation-link-large">
+                                    <f:ajax execute="@this" render="menu" />
+                                </h:commandLink>
+                            </td>
+                        </tr>
+                    </c:if>             
+                </table>
+            </h:form>
+        </h:panelGroup>
+    </f:view>
+</ui:composition>
+

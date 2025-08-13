@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns = "http://www.w3.org/1999/xhtml"
+                xmlns:f = "http://java.sun.com/jsf/core"
+                xmlns:h = "http://java.sun.com/jsf/html"
+                xmlns:ui = "http://xmlns.jcp.org/jsf/facelets"
+                xmlns:c = "jakarta.tags.core">
+
+    <div class="standard">
+        <!--onLoad="parent.frames[2].location="playlist.jsp">-->
+        <f:view>  
+            <table>
+                <tr>                  
+                    <ui:repeat value="#{utilBean.getAlphabet()}" var="letter">
+                        <td align="center">
+                            <h:link outcome="index" value="#{letter}" class="navigation-link-bold">
+                                <f:param name="letter" value="#{letter}" />
+                            </h:link>
+                            &nbsp;
+                        </td>
+                    </ui:repeat>
+                    <td>
+                        <h:link outcome="index" value="Un" class="navigation-link-bold">
+                            <f:param name="unsorted" value="true"/>
+                        </h:link>
+                        &nbsp;    
+                    </td>
+                </tr>
+            </table>
+
+            <table>
+                <tr><td height="6">&nbsp;</td></tr>
+            </table>
+
+            <table class="navigation-link-small">
+                <c:if test="#{param.letter != null}">
+                    <table>
+                        <tr>
+                            <td class="list-header">#{param.letter} artists</td>
+                        </tr>
+                    </table>
+                    <h:dataTable value="#{searchBean.getArtistsStartingWith(param.letter)}" var="artist" border="0">   
+                        <h:column>
+                            <h:link outcome="index" value="#{artist.artistName}" class="navigation-link-small"><!-- -->
+                                <f:param name="artistId" value="#{artist.id}"/>
+                                <f:param name="artistName" value="#{artist.artistName}"/>
+                            </h:link>
+                        </h:column>
+                    </h:dataTable>
+                </c:if>
+
+                <c:if test="#{param.artistId != null}">
+                    <table>
+                        <tr>
+                            <td class="list-header">#{param.artistName} albums</td>
+                        </tr>
+                    </table>
+                    <h:dataTable value="#{searchBean.getAlbumsByArtistId(param.artistId)}" var="album" border="0">
+                        <h:column>
+                            <h:link outcome="index" value="#{album.albumName}" class="navigation-link-small">
+                                <f:param name="albumId" value="#{album.id}"/>
+                                <f:param name="albumName" value="#{album.albumName}"/>
+                            </h:link>
+                        </h:column>
+                    </h:dataTable>                    
+                </c:if>
+
+                <c:if test="#{param.albumId != null}">
+                    <table>
+                        <tr>
+                            <td class="list-header">#{param.albumName}</td>
+                        </tr>
+                    </table>
+                    <h:dataTable value="#{searchBean.getTracksForAlbum(param.albumId)}" var="track" border="0">
+                        <h:column>
+                            <h:link outcome="nav" value="#{track.trackName}" class="navigation-link-small">
+                                <f:param name="trackId" value="#{track.id}"/>
+                                <f:param name="albumId" value="#{album.id}"/>
+                                <f:param name="albumName" value="#{album.albumName}"/>
+                            </h:link>
+                        </h:column>
+                    </h:dataTable>                    
+                </c:if>
+            </table>
+        </f:view>
+
+    </div>
+
+</ui:composition>
+

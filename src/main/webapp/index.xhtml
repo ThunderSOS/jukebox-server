@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns = "http://www.w3.org/1999/xhtml"
+      xmlns:f = "http://java.sun.com/jsf/core"
+      xmlns:h = "http://java.sun.com/jsf/html"
+      xmlns:ui = "http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c = "jakarta.tags.core">
+
+    <head>
+        <title>Java Jukebox (v2.0)</title>
+        <link rel="stylesheet" type="text/css" href="jb2.css"/>
+        <style>
+            body {
+                margin: 0;
+                height: 100vh;
+                display: flex;
+                font-family: sans-serif;
+                background: #180F14;
+            }
+
+            iframe {
+                width: 100%;
+                height: 100%;
+                border: none;
+            }
+
+            .menu {
+                width: 20%;
+                height: 100vh;
+                border-right: 2px solid #ccc;
+            }
+
+            .right-section {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .main {
+                flex: 2;
+                border-bottom: 2px solid #ccc;
+                overflow-y: auto;
+            }
+
+            .bottom {
+                flex: 1.5;
+                overflow-y: auto;
+            }
+        </style>
+        <script>
+            window.onload = function () {
+                setInterval(function () {
+                    document.getElementById("#{playlistBean.hiddenButton.clientId}").click();
+                }, 5000);
+            };
+        </script>
+    </head>
+
+    <body>
+        <div class="menu">
+            <span class="standard">
+                <ui:include src="menu.xhtml"/>
+            </span>
+        </div>
+
+        <!-- Right Section (Main + Bottom) -->
+        <div class="right-section">
+            <div id="nav-page" class="main">
+                <span class="standard">
+                    <ui:include src="main.xhtml"/>
+                </span>
+            </div>
+            <div class="bottom">
+                <!-- 
+                This form is here so we can reference it from main,xhtml in
+                order to be able to update the queue when a selection is made.
+                --> 
+                <h:form id="playlistForm">
+                    <span class="standard">
+                        <ui:include src="playlist.xhtml"/>
+                    </span>
+                </h:form>
+            </div>
+        </div>
+    </body>
+
+</html>
