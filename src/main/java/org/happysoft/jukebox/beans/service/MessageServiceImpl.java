@@ -4,7 +4,6 @@ package org.happysoft.jukebox.beans.service;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import jakarta.ejb.Stateless;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.jms.Connection;
 import jakarta.jms.ConnectionFactory;
@@ -41,6 +40,7 @@ public class MessageServiceImpl implements MessageService {
   }
   
   @RequestScoped
+  @Override
   public void sendMessage(final JukeboxMessage message) throws JMSException {
       final Message jmsMessage = session.createObjectMessage(message);
       producer.send(jmsMessage);

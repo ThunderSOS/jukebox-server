@@ -12,6 +12,9 @@
         <h:panelGroup id="menu" >
             <h:form>
                 <table align="left">
+                    <tr>
+                        <td class="list-header">Menu</td>
+                    </tr>
                     <c:if test="#{!sessionBean.loggedIn}">
                         <tr>
                             <td>                            
@@ -28,7 +31,24 @@
                                     <f:ajax execute="@this" render="menu" />
                                 </h:commandLink>
                             </td>
-                        </tr>
+                        </tr>  
+                        <c:if test="#{sessionBean.loadingStatsAvailable()}">                                                         
+                            <tr>
+                                <td>
+                                    <h:outputText value="Loaded #{sessionBean.numLoaded}" class="track-owner"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <h:outputText value="New #{sessionBean.numNew}" class="track-owner"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <h:outputText value="Removed #{sessionBean.numRemoved}" class="track-owner"/>
+                                </td>
+                            </tr>
+                        </c:if>
                         <tr>
                             <td>
                                 <h:commandLink action="#{sessionBean.logout()}" value="Logout" class="navigation-link-large">

@@ -15,9 +15,11 @@
         <url-pattern>*.xhtml</url-pattern>
     </servlet-mapping>
     
+    <!--    
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>
+    -->
     
     <resource-env-ref>
         <resource-env-ref-name>BeanManager</resource-env-ref-name>

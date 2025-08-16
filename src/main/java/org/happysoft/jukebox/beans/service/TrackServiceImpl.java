@@ -24,11 +24,13 @@ public class TrackServiceImpl implements TrackService {
     JBTrack track;
     try {
       track = findByOwnerArtistAlbumAndName(ownerId, artistId, albumId, trackName);
+      track.setFoundOnLastLoad(true);
+
     } catch (NoResultException nre) {
       track = new JBTrack(remote, ownerId, artistId, albumId, trackName);
       track.setOwnerId(ownerId);
     }
-    track.setFoundOnLastLoad(true);
+
     em.persist(track);
     return track;
   }
@@ -54,8 +56,8 @@ public class TrackServiceImpl implements TrackService {
 
   @Override
   @RequestScoped
-  public void tidyUpAfterReload(long ownerId) {
-    em.createQuery("delete from JBTrack j where j.foundOnLastLoad = false and j.ownerId = :id")
+  public int tidyUpAfterReload(long ownerId) {
+    return em.createQuery("delete from JBTrack j where j.foundOnLastLoad = false and j.ownerId = :id")
             .setParameter("id", ownerId)
             .executeUpdate();
   }
@@ -68,6 +70,22 @@ public class TrackServiceImpl implements TrackService {
             .setParameter("albumId", albumId)
             .setParameter("artistId", artistId)
             .setParameter("trackName", trackName)
+            .getSingleResult();
+  }
+
+  @Override
+  @RequestScoped
+  public long countByOwner(long ownerId) {
+    return em.createNamedQuery("track.countByOwner", Long.class)
+            .setParameter("ownerId", ownerId)
+            .getSingleResult();
+  }
+
+  @Override
+  @RequestScoped
+  public long countNewByOwner(long ownerId) {
+    return em.createNamedQuery("track.countNewByOwner", Long.class)
+            .setParameter("ownerId", ownerId)
             .getSingleResult();
   }
 

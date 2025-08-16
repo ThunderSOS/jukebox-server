@@ -20,20 +20,21 @@ public class ArtistServiceImpl implements ArtistService {
   @Override
   @RequestScoped
   public JBArtist findOrCreateArtist(long ownerId, String artistName) {
-    JBArtist artist;  
+    JBArtist artist;
     try {
       artist = findByOwnerAndArtistName(ownerId, artistName);
-    
-    } catch (NoResultException nre) {      
+      artist.setFoundOnLastLoad(true);
+
+    } catch (NoResultException nre) {
       artist = new JBArtist();
       artist.setArtistName(artistName);
-      artist.setOwnerId(ownerId);      
+      artist.setOwnerId(ownerId);
     }
-    artist.setFoundOnLastLoad(true);
+
     em.persist(artist);
     return artist;
   }
-  
+
   @Override
   public JBArtist findById(long trackId) {
     return em.createNamedQuery("artist.findById", JBArtist.class).setParameter("id", trackId).getSingleResult();
@@ -47,7 +48,7 @@ public class ArtistServiceImpl implements ArtistService {
     em.remove(artist);
     return artist;
   }
-  
+
   @Override
   @RequestScoped
   public void prepareForReload(long ownerId) {
@@ -55,11 +56,11 @@ public class ArtistServiceImpl implements ArtistService {
             .setParameter("id", ownerId)
             .executeUpdate();
   }
-  
+
   @Override
   @RequestScoped
-  public void tidyUpAfterReload(long ownerId) {
-    em.createQuery("delete from JBArtist j where j.foundOnLastLoad = false and j.ownerId = :id")
+  public int tidyUpAfterReload(long ownerId) {
+    return em.createQuery("delete from JBArtist j where j.foundOnLastLoad = false and j.ownerId = :id")
             .setParameter("id", ownerId)
             .executeUpdate();
   }
@@ -72,5 +73,21 @@ public class ArtistServiceImpl implements ArtistService {
             .setParameter("artistName", artistName)
             .getSingleResult();
   }
-  
+
+  @Override
+  @RequestScoped
+  public long countByOwner(long ownerId) {
+    return em.createNamedQuery("artist.countByOwner", Long.class)
+            .setParameter("ownerId", ownerId)
+            .getSingleResult();
+  }
+
+  @Override
+  @RequestScoped
+  public long countNewByOwner(long ownerId) {
+    return em.createNamedQuery("artist.countNewByOwner", Long.class)
+            .setParameter("ownerId", ownerId)
+            .getSingleResult();
+  }
+
 }

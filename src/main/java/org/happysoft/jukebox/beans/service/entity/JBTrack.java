@@ -23,6 +23,8 @@ import org.happysoft.jukebox.model.RemoteDirectory;
   @NamedQuery(name = "track.findLooseTracksForArtist", query="SELECT t FROM JBTrack t WHERE t.albumId = 0 AND t.artistId = :artistId ORDER BY t.trackName"),
   @NamedQuery(name = "track.findLooseTracks", query="SELECT t FROM JBTrack t WHERE t.albumId = 0 AND t.artistId = 0 ORDER BY t.trackName"),
   @NamedQuery(name = "track.findById", query="SELECT t FROM JBTrack t WHERE t.id = :id"),
+  @NamedQuery(name = "track.countByOwner", query="SELECT COUNT(t) FROM JBTrack t WHERE t.ownerId = :ownerId"),  
+  @NamedQuery(name = "track.countNewByOwner", query="SELECT COUNT(t) FROM JBTrack t WHERE t.ownerId = :ownerId AND t.foundOnLastLoad = false")
 })
 public class JBTrack extends AbstractJukeboxEntity {
 

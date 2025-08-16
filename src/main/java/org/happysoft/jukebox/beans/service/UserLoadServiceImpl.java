@@ -1,28 +1,35 @@
-package org.happysoft.jukebox.beans.load;
 
+package org.happysoft.jukebox.beans.service;
+
+import jakarta.ejb.Asynchronous;
 import jakarta.ejb.EJB;
+import jakarta.ejb.Stateless;
 import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Inject;
-import jakarta.inject.Named;
-import java.io.*;
-import java.util.*;
-
-import org.happysoft.jukebox.beans.service.entity.JBTrack;
-import org.happysoft.jukebox.beans.service.entity.JBArtist;
-import org.happysoft.jukebox.beans.service.entity.JBAlbum;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import org.happysoft.jukebox.beans.UserSessionBean;
-import org.happysoft.jukebox.beans.service.ArtistService;
-import org.happysoft.jukebox.beans.service.AlbumService;
-import org.happysoft.jukebox.beans.service.TrackService;
+import org.happysoft.jukebox.beans.load.FileList;
+import org.happysoft.jukebox.beans.load.JBFilenameFilter;
+import org.happysoft.jukebox.beans.service.entity.JBAlbum;
+import org.happysoft.jukebox.beans.service.entity.JBArtist;
+import org.happysoft.jukebox.beans.service.entity.JBTrack;
 import org.happysoft.jukebox.model.RemoteDirectory;
 
-@Named(value = "loaderBean")
-@RequestScoped
-public class StandardDirectoryLoaderBean {
-
-  private JBFilenameFilter filter = new JBFilenameFilter();
+/**
+ *
+ * @author chrisf
+ */
+@Stateless
+public class UserLoadServiceImpl implements Serializable {
+  
+  private final JBFilenameFilter filter = new JBFilenameFilter();
   // list of directories to exclude whilst scanning
-  private List<String> exclude = new ArrayList<>();
+  private final List<String> exclude = new ArrayList<>();
 
   private volatile boolean loadInProgress = false;
 
@@ -41,12 +48,13 @@ public class StandardDirectoryLoaderBean {
   @EJB
   private TrackService trackService;
 
-  public StandardDirectoryLoaderBean() {
+  public UserLoadServiceImpl() {
     exclude.add("incoming");
     exclude.add("test");
   }
   
   @RequestScoped
+  @Asynchronous
   public void startLoad() throws FileNotFoundException {
     remote = new RemoteDirectory(null, sessionBean.getDirectory());
     ownerId = sessionBean.getOwnerId();
@@ -152,6 +160,10 @@ public class StandardDirectoryLoaderBean {
       System.out.println("Found loose track: " + tr.getTrackName());
     }
     return list;
+  }
+ 
+  public boolean isLoadInProgress() {
+    return loadInProgress;
   }
   
 }
