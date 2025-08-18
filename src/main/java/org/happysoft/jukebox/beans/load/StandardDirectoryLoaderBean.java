@@ -55,7 +55,7 @@ public class StandardDirectoryLoaderBean {
     artistService.prepareForReload(ownerId);
     albumService.prepareForReload(ownerId);
     trackService.prepareForReload(ownerId);
-    sessionBean.prepareForLoad();
+    //sessionBean.prepareForLoad();
 
     loadAll();
 

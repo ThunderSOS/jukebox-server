@@ -8,55 +8,65 @@
                 xmlns:ui = "http://xmlns.jcp.org/jsf/facelets"
                 xmlns:c = "jakarta.tags.core">
 
-    <f:view>  
-        <h:panelGroup id="menu" >
+    <f:view>
+        <h:panelGroup id="menu">
             <h:form>
-                <table align="left">
+                <h:commandButton id="hiddenRefreshBtn" binding="#{sessionBean.hiddenButton}" type="button" style="display:none;">
+                    <f:ajax event="click" render="menu" />
+                </h:commandButton>
+
+                <h:outputScript>startPolling("#{sessionBean.hiddenButton.clientId}");</h:outputScript>
+
+                <table>
                     <tr>
-                        <td class="list-header">Menu</td>
+                        <td>
+                            <table align="left">
+                                <tr>
+                                    <td class="list-header">Menu</td>
+                                </tr>
+                            </table>
+                        </td>
                     </tr>
-                    <c:if test="#{!sessionBean.loggedIn}">
-                        <tr>
-                            <td>                            
-                                <h:commandLink action="#{sessionBean.login()}" value="Login" class="navigation-link-large">
-                                    <f:ajax execute="@this" render="menu" />
-                                </h:commandLink>
-                            </td>
-                        </tr>
-                    </c:if>
-                    <c:if test="#{sessionBean.loggedIn}">
-                        <tr>
-                            <td>
-                                <h:commandLink action="#{loaderBean.startLoad()}" value="Load" class="navigation-link-large">
-                                    <f:ajax execute="@this" render="menu" />
-                                </h:commandLink>
-                            </td>
-                        </tr>  
-                        <c:if test="#{sessionBean.loadingStatsAvailable()}">                                                         
-                            <tr>
-                                <td>
-                                    <h:outputText value="Loaded #{sessionBean.numLoaded}" class="track-owner"/>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <h:outputText value="New #{sessionBean.numNew}" class="track-owner"/>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <h:outputText value="Removed #{sessionBean.numRemoved}" class="track-owner"/>
-                                </td>
-                            </tr>
-                        </c:if>
-                        <tr>
-                            <td>
-                                <h:commandLink action="#{sessionBean.logout()}" value="Logout" class="navigation-link-large">
-                                    <f:ajax execute="@this" render="menu" />
-                                </h:commandLink>
-                            </td>
-                        </tr>
-                    </c:if>             
+                    <tr>
+                        <td>
+                            <h:panelGroup rendered="#{!sessionBean.loggedIn}">
+                                <tr>
+                                    <td>
+                                        <h:commandLink action="#{sessionBean.login()}" value="Login" class="navigation-link-large">
+                                            <f:ajax execute="@this" render="menu" />
+                                        </h:commandLink>
+                                    </td>
+                                </tr>
+                            </h:panelGroup>
+
+                            <h:panelGroup rendered="#{sessionBean.loggedIn}">
+                                <h:panelGroup rendered="#{!sessionBean.loadInProgress}">
+                                    <tr>
+                                        <td>
+                                            <h:commandLink action="#{sessionBean.startLoad()}" value="Load" class="navigation-link-large">
+                                                <f:ajax execute="@this" render="menu" />
+                                            </h:commandLink>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <h:commandLink action="#{sessionBean.logout()}" value="Logout" class="navigation-link-large">
+                                                <f:ajax execute="@this" render="menu" />
+                                            </h:commandLink>
+                                        </td>
+                                    </tr>
+                                    <h:outputScript>stopPolling();</h:outputScript>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{sessionBean.loadInProgress}">
+                                    <tr>
+                                        <td>
+                                            <h:outputText value="Load in progress..." class="track-owner" />
+                                        </td>
+                                    </tr>
+                                </h:panelGroup>                                    
+                            </h:panelGroup>
+                        </td>
+                    </tr>
                 </table>
             </h:form>
         </h:panelGroup>

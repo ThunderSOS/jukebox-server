@@ -10,9 +10,9 @@
     xmlns:c = "jakarta.tags.core">
 
     <h:panelGroup id="playlist">
-        <table>
-            <tr><td height="6">&nbsp;</td></tr>
-        </table>
+        <h:commandButton id="hiddenRefreshBtn" binding="#{playlistBean.hiddenButton}" type="button" style="display:none;">
+            <f:ajax event="click" render="playlist" />
+        </h:commandButton>
 
         <table class="navigation-link-small">
             <table>
@@ -58,10 +58,6 @@
                     <h:outputText value="#{t.track.trackName}" class="track-owner"/>
                 </h:column>                                                 
             </h:dataTable>
-
-            <h:commandButton id="hiddenRefreshBtn" binding="#{playlistBean.hiddenButton}" type="button" style="display:none;">
-                <f:ajax event="click" render="playlist" />
-            </h:commandButton>
         </table>
     </h:panelGroup>
 </ui:composition>

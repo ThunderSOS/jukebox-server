@@ -1,10 +1,10 @@
 
 package org.happysoft.jukebox.beans.service;
 
+import jakarta.ejb.AsyncResult;
 import jakarta.ejb.Asynchronous;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
-import jakarta.enterprise.context.RequestScoped;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Inject;
 import java.io.File;
@@ -12,12 +12,14 @@ import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Future;
 import org.happysoft.jukebox.beans.UserSessionBean;
 import org.happysoft.jukebox.beans.load.FileList;
 import org.happysoft.jukebox.beans.load.JBFilenameFilter;
 import org.happysoft.jukebox.beans.service.entity.JBAlbum;
 import org.happysoft.jukebox.beans.service.entity.JBArtist;
 import org.happysoft.jukebox.beans.service.entity.JBTrack;
+import org.happysoft.jukebox.beans.service.entity.JBUser;
 import org.happysoft.jukebox.model.RemoteDirectory;
 
 /**
@@ -25,7 +27,7 @@ import org.happysoft.jukebox.model.RemoteDirectory;
  * @author chrisf
  */
 @Stateless
-public class UserLoadServiceImpl implements Serializable {
+public class UserLoadServiceImpl implements UserLoadService, Serializable {
   
   private final JBFilenameFilter filter = new JBFilenameFilter();
   // list of directories to exclude whilst scanning
@@ -36,8 +38,8 @@ public class UserLoadServiceImpl implements Serializable {
   private long ownerId;
   private RemoteDirectory remote;
 
-  @Inject
-  private UserSessionBean sessionBean;
+  @EJB
+  private UserService userService;
 
   @EJB
   private ArtistService artistService;
@@ -53,25 +55,34 @@ public class UserLoadServiceImpl implements Serializable {
     exclude.add("test");
   }
   
-  @RequestScoped
+  @SessionScoped
   @Asynchronous
-  public void startLoad() throws FileNotFoundException {
-    remote = new RemoteDirectory(null, sessionBean.getDirectory());
-    ownerId = sessionBean.getOwnerId();
+  @Override
+  public Future<String> startLoad() {
+    JBUser user = userService.findByUsername("chris");
+    String directory = user.getSharedFolder();
+    ownerId = user.getUserId();
+    remote = new RemoteDirectory(null, directory);
+    ownerId = 1; //sessionBean.getOwnerId();
     loadInProgress = true;
 
     artistService.prepareForReload(ownerId);
     albumService.prepareForReload(ownerId);
     trackService.prepareForReload(ownerId);
-    sessionBean.prepareForLoad();
-
-    loadAll();
+    //sessionBean.prepareForLoad();
+    
+    try {
+      loadAll();
+    } catch (FileNotFoundException fnfe) {
+      fnfe.printStackTrace();
+    }
 
     trackService.tidyUpAfterReload(ownerId);
     albumService.tidyUpAfterReload(ownerId);
     artistService.tidyUpAfterReload(ownerId);
 
     loadInProgress = false;
+    return new AsyncResult<>("done");// will return a stats object
   }
 
   private void loadAll() throws FileNotFoundException {
@@ -162,6 +173,7 @@ public class UserLoadServiceImpl implements Serializable {
     return list;
   }
  
+  @Override
   public boolean isLoadInProgress() {
     return loadInProgress;
   }

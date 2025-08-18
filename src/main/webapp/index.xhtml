@@ -46,6 +46,30 @@
                 overflow-y: auto;
             }
         </style>
+        <script type="text/javascript">
+            function startPolling(buttonClientId) {
+                if (window.pollingInterval) {
+                    clearInterval(window.pollingInterval);
+                }
+
+                window.pollingInterval = setInterval(function () {
+                    var button = document.getElementById(buttonClientId);
+                    if (button) {
+                        button.click();
+                    } else {
+                        console.warn("Polling button not found.");
+                    }
+                }, 5000);
+            }
+
+            // Optional: stop polling if needed
+            function stopPolling() {
+                if (window.pollingInterval) {
+                    clearInterval(window.pollingInterval);
+                    window.pollingInterval = null;
+                }
+            }
+        </script>  
         <script>
             window.onload = function () {
                 setInterval(function () {
@@ -57,9 +81,11 @@
 
     <body>
         <div class="menu">
-            <span class="standard">
-                <ui:include src="menu.xhtml"/>
-            </span>
+            <h:form id="menuForm">
+                <span class="standard">
+                    <ui:include src="menu.xhtml"/>
+                </span>
+            </h:form>
         </div>
 
         <!-- Right Section (Main + Bottom) -->
@@ -71,8 +97,8 @@
             </div>
             <div class="bottom">
                 <!-- 
-                This form is here so we can reference it from main,xhtml in
-                order to be able to update the queue when a selection is made.
+                                This form is here so we can reference it from main,xhtml in
+                            order to be able to update the queue when a selection is made.
                 --> 
                 <h:form id="playlistForm">
                     <span class="standard">
