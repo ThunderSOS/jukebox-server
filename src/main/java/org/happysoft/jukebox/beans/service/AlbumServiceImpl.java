@@ -22,15 +22,15 @@ public class AlbumServiceImpl implements AlbumService {
   public JBAlbum findOrCreateAlbum(long ownerId, long artistId, String albumName) {
     JBAlbum album;
     try {
-      album = findByArtistIdAndAlbumName(artistId, albumName);      
-      album.setFoundOnLastLoad(true);
+      album = findByArtistIdAndAlbumName(artistId, albumName);  
 
     } catch (NoResultException nre) {
       album = new JBAlbum(ownerId);
       album.setAlbumName(albumName);
       album.setArtistId(artistId);
-      album.setOwnerId(ownerId);    
+      album.setOwnerId(ownerId); 
     }
+    album.setFoundOnLastLoad(true);
     em.persist(album);
     return album;
   }

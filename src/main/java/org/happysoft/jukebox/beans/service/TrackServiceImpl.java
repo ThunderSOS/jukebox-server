@@ -24,13 +24,12 @@ public class TrackServiceImpl implements TrackService {
     JBTrack track;
     try {
       track = findByOwnerArtistAlbumAndName(ownerId, artistId, albumId, trackName);
-      track.setFoundOnLastLoad(true);
 
     } catch (NoResultException nre) {
       track = new JBTrack(remote, ownerId, artistId, albumId, trackName);
-      track.setOwnerId(ownerId);
+      track.setOwnerId(ownerId);      
     }
-
+    track.setFoundOnLastLoad(true);
     em.persist(track);
     return track;
   }

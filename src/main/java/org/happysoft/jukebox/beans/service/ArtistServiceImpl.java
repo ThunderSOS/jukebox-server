@@ -23,14 +23,13 @@ public class ArtistServiceImpl implements ArtistService {
     JBArtist artist;
     try {
       artist = findByOwnerAndArtistName(ownerId, artistName);
-      artist.setFoundOnLastLoad(true);
-
+      
     } catch (NoResultException nre) {
       artist = new JBArtist();
       artist.setArtistName(artistName);
       artist.setOwnerId(ownerId);
     }
-
+    artist.setFoundOnLastLoad(true);
     em.persist(artist);
     return artist;
   }
