@@ -18,6 +18,7 @@ import org.happysoft.jukebox.beans.service.entity.JBTrack;
 import org.happysoft.jukebox.messaging.AddToQueueMessage;
 import org.happysoft.jukebox.messaging.PauseMessage;
 import org.happysoft.jukebox.messaging.PlayMessage;
+import org.happysoft.jukebox.messaging.RemoveFromQueueMessage;
 import org.happysoft.jukebox.messaging.StopMessage;
 import org.happysoft.jukebox.model.Request;
 
@@ -71,6 +72,14 @@ public class PlaylistBean implements Serializable {
     String rId = context.getExternalContext().getRequestParameterMap().get("requestId");
     long requestId = Long.parseLong(rId);
     playlistService.cancel(requestId);
+    RemoveFromQueueMessage message = new RemoveFromQueueMessage();
+    message.setRequestId(requestId);
+    try {
+      messageService.sendMessage(message);
+
+    } catch (JMSException e) {
+      e.printStackTrace();
+    }
   }
 
   public void pause() {

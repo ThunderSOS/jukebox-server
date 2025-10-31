@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package org.happysoft.jukebox.beans.service.entity;
 
 import jakarta.persistence.Column;
@@ -9,8 +6,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
-import jakarta.persistence.PreUpdate;
-import java.sql.Date;
 import java.sql.Timestamp;
 
 /**
@@ -29,10 +24,10 @@ public class AbstractJukeboxEntity {
   private final Timestamp dateCreated;
   
   @Column (name = "found_on_last_load")
-  private boolean foundOnLastLoad = false;    
+  private boolean foundOnLastLoad = false;
       
   @Column(name = "owner_id")
-  private Long ownerId;    
+  private Long ownerId;
 
 
   public AbstractJukeboxEntity() {
