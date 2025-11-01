@@ -51,21 +51,21 @@ public class SearchServiceImpl implements SearchService {
   @Override
   @RequestScoped
   public List<JBTrack> findTracksForAlbum(long albumId) {
-    System.out.println("Finding tracls for album " + albumId);
+    System.out.println("Finding tracks for album " + albumId);
     return em.createNamedQuery("track.findTracksForAlbum").setParameter("albumId", albumId).getResultList();
   }
   
   @Override
   @RequestScoped
   public List<JBTrack> findLooseTracksForArtist(long artistId) {
-    System.out.println("Finding tracls for artist " + artistId);
+    System.out.println("Finding tracks for artist " + artistId);
     return em.createNamedQuery("track.findLooseTracksForArtist").setParameter("artistId", artistId).getResultList();
   }
   
   @Override
   @RequestScoped
   public List<JBTrack> findLooseTracks() {
-    System.out.println("Finding loose tracls");
+    System.out.println("Finding loose tracks");
     return em.createNamedQuery("track.findLooseTracks").getResultList();
   }
 

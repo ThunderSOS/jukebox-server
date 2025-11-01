@@ -33,7 +33,6 @@ public class PlaylistResource {
   @POST
   @Produces(MediaType.APPLICATION_JSON)
   public Response setRequestStatus(@QueryParam("requestId") long requestId, @QueryParam("status") RequestStatus status) {
-    System.out.println("In service setRequestStatus()");
     playlistService.setRequestStatus(requestId, status);
     return Response.noContent().build();
   }
@@ -42,7 +41,6 @@ public class PlaylistResource {
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/clearPlaying")
   public Response clearPlaying() {
-    System.out.println("In service setRequestStatus()");
     playlistService.clearPlaying();
     return Response.noContent().build();
   }
@@ -51,7 +49,6 @@ public class PlaylistResource {
   @Path("/getQueue")
   @Produces(MediaType.APPLICATION_JSON)
   public Response getQueue() {
-    System.out.println("In service getQueue()");
     List<JBPlaylistRequest> queue = playlistService.getQueued();
     
     List<Request> reqs = new ArrayList<>();
