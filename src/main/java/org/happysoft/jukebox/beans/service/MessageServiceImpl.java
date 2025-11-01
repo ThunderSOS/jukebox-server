@@ -44,7 +44,7 @@ public class MessageServiceImpl implements MessageService {
   public void sendMessage(final JukeboxMessage message) throws JMSException {
       final Message jmsMessage = session.createObjectMessage(message);
       producer.send(jmsMessage);
-      System.out.println("Message sent to queue: " + queue.getQueueName());
+      System.out.println(message.getClass() + " message sent to queue: " + queue.getQueueName());
   }
   
 }
