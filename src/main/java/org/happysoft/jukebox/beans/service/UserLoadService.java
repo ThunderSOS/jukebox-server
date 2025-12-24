@@ -1,7 +1,7 @@
 package org.happysoft.jukebox.beans.service;
 
-import java.io.FileNotFoundException;
 import java.util.concurrent.Future;
+import org.happysoft.jukebox.beans.LoadResult;
 
 /**
  *
@@ -9,7 +9,7 @@ import java.util.concurrent.Future;
  */
 public interface UserLoadService {
 
-  public Future<String> startLoad() throws FileNotFoundException;
+  public Future<LoadResult> startLoad();
 
   public boolean isLoadInProgress();
 

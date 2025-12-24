@@ -77,12 +77,10 @@ public class StandardDirectoryLoaderBean {
   }
 
   private List<JBTrack> loadArtists(File[] directories, long ownerId) throws FileNotFoundException {
-    System.out.println("Loading artists");
     List<JBTrack> allTracks = new ArrayList();
 
     for (var artistDirectory : directories) {
       String artistName = artistDirectory.getName();
-      System.out.println("Loading artist: " + artistName);
       JBArtist artist = artistService.findOrCreateArtist(ownerId, artistName);
 
       FileList artistAlbums = new FileList(remote, artist.getArtistName(), exclude);
@@ -104,7 +102,6 @@ public class StandardDirectoryLoaderBean {
     List<JBTrack> allTracks = new ArrayList();
     for (File al : albumList) {
       String albumName = al.getName();
-      System.out.println("Loading album: " + albumName);
       JBAlbum album = albumService.findOrCreateAlbum(ownerId, artist.getId(), albumName);
       List<JBTrack> albumTracks = loadTracksForAlbum(artist, album);
 
@@ -120,7 +117,6 @@ public class StandardDirectoryLoaderBean {
     List<JBTrack> allTracks = new ArrayList();
 
     for (var tr : unsortedTracks) {
-      System.out.println("Unsorted track: " + tr.getAbsolutePath());
       JBTrack t = trackService.findOrCreateTrack(remote, ownerId, 0L, 0L, tr.getName());
       allTracks.add(t);
     }
@@ -130,14 +126,12 @@ public class StandardDirectoryLoaderBean {
   private List<JBTrack> loadTracksForAlbum(JBArtist artist, JBAlbum album) {
     String subDirectory = artist.getArtistName() + "/" + album.getAlbumName();
     File f = new File(remote.toString(), subDirectory);
-    System.out.println("Listing tracks in folder: " + f.getAbsolutePath());
     File[] trackList = f.listFiles(filter);
     List<JBTrack> list = new ArrayList();
 
     for (File t : trackList) {
       JBTrack tr = trackService.findOrCreateTrack(remote, ownerId, artist.getId(), album.getId(), t.getName());
       list.add(tr);
-      System.out.println("Found album track: " + tr.getTrackName());
     }
     return list;
   }
@@ -149,7 +143,6 @@ public class StandardDirectoryLoaderBean {
       String trackName = looseTrack.getName();
       JBTrack tr = trackService.findOrCreateTrack(remote, ownerId, artistId, 0L, trackName);
       list.add(tr);
-      System.out.println("Found loose track: " + tr.getTrackName());
     }
     return list;
   }

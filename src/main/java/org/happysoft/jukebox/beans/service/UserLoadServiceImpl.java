@@ -6,14 +6,14 @@ import jakarta.ejb.Asynchronous;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.enterprise.context.SessionScoped;
-import jakarta.inject.Inject;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
-import org.happysoft.jukebox.beans.UserSessionBean;
+import org.happysoft.jukebox.beans.LoadResult;
+import org.happysoft.jukebox.beans.LoadType;
 import org.happysoft.jukebox.beans.load.FileList;
 import org.happysoft.jukebox.beans.load.JBFilenameFilter;
 import org.happysoft.jukebox.beans.service.entity.JBAlbum;
@@ -30,6 +30,7 @@ import org.happysoft.jukebox.model.RemoteDirectory;
 public class UserLoadServiceImpl implements UserLoadService, Serializable {
   
   private final JBFilenameFilter filter = new JBFilenameFilter();
+  
   // list of directories to exclude whilst scanning
   private final List<String> exclude = new ArrayList<>();
 
@@ -37,6 +38,8 @@ public class UserLoadServiceImpl implements UserLoadService, Serializable {
 
   private long ownerId;
   private RemoteDirectory remote;
+  
+  private LoadResult loadResult;
 
   @EJB
   private UserService userService;
@@ -58,7 +61,7 @@ public class UserLoadServiceImpl implements UserLoadService, Serializable {
   @SessionScoped
   @Asynchronous
   @Override
-  public Future<String> startLoad() {
+  public Future<LoadResult> startLoad() {
     JBUser user = userService.findByUsername("chris");
     String directory = user.getSharedFolder();
     ownerId = user.getUserId();
@@ -69,20 +72,21 @@ public class UserLoadServiceImpl implements UserLoadService, Serializable {
     artistService.prepareForReload(ownerId);
     albumService.prepareForReload(ownerId);
     trackService.prepareForReload(ownerId);
-    //sessionBean.prepareForLoad();
+    
+    loadResult = new LoadResult();
     
     try {
       loadAll();
     } catch (FileNotFoundException fnfe) {
       fnfe.printStackTrace();
     }
-
-    trackService.tidyUpAfterReload(ownerId);
-    albumService.tidyUpAfterReload(ownerId);
-    artistService.tidyUpAfterReload(ownerId);
+    
+    loadResult.addNumLoaded(LoadType.TRACK, -trackService.tidyUpAfterReload(ownerId));
+    loadResult.addNumLoaded(LoadType.ALBUM, -albumService.tidyUpAfterReload(ownerId));
+    loadResult.addNumLoaded(LoadType.ARTIST, -artistService.tidyUpAfterReload(ownerId));
 
     loadInProgress = false;
-    return new AsyncResult<>("done");// will return a stats object
+    return new AsyncResult<>(loadResult);
   }
 
   private void loadAll() throws FileNotFoundException {
@@ -103,6 +107,7 @@ public class UserLoadServiceImpl implements UserLoadService, Serializable {
       String artistName = artistDirectory.getName();
       System.out.println("Loading artist: " + artistName);
       JBArtist artist = artistService.findOrCreateArtist(ownerId, artistName);
+      loadResult.incNumLoaded(LoadType.ARTIST);
 
       FileList artistAlbums = new FileList(remote, artist.getArtistName(), exclude);
       File[] albumList = artistAlbums.getDirectories();
@@ -125,10 +130,13 @@ public class UserLoadServiceImpl implements UserLoadService, Serializable {
       String albumName = al.getName();
       System.out.println("Loading album: " + albumName);
       JBAlbum album = albumService.findOrCreateAlbum(ownerId, artist.getId(), albumName);
+      loadResult.incNumLoaded(LoadType.ALBUM);
       List<JBTrack> albumTracks = loadTracksForAlbum(artist, album);
 
       if (albumTracks.isEmpty()) {
+        System.out.println("Removing album " + album.getAlbumName());
         albumService.removeAlbum(artist.getId(), album.getAlbumName());
+        loadResult.incNumRemoved(LoadType.ALBUM);
       }
       allTracks.addAll(albumTracks);
     }
@@ -141,6 +149,7 @@ public class UserLoadServiceImpl implements UserLoadService, Serializable {
     for (var tr : unsortedTracks) {
       System.out.println("Unsorted track: " + tr.getAbsolutePath());
       JBTrack t = trackService.findOrCreateTrack(remote, ownerId, 0L, 0L, tr.getName());
+      loadResult.incNumLoaded(LoadType.TRACK);
       allTracks.add(t);
     }
     return allTracks;
@@ -156,6 +165,7 @@ public class UserLoadServiceImpl implements UserLoadService, Serializable {
     for (File t : trackList) {
       JBTrack tr = trackService.findOrCreateTrack(remote, ownerId, artist.getId(), album.getId(), t.getName());
       list.add(tr);
+      loadResult.incNumLoaded(LoadType.TRACK);
       System.out.println("Found album track: " + tr.getTrackName());
     }
     return list;
@@ -169,6 +179,7 @@ public class UserLoadServiceImpl implements UserLoadService, Serializable {
       JBTrack tr = trackService.findOrCreateTrack(remote, ownerId, artistId, 0L, trackName);
       list.add(tr);
       System.out.println("Found loose track: " + tr.getTrackName());
+      loadResult.incNumLoaded(LoadType.TRACK);
     }
     return list;
   }

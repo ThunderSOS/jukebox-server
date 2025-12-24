@@ -24,11 +24,8 @@ public class ArtistListBean implements Serializable {
   private SearchService searchService;
   
   private List<JBArtist> artists = List.of();
-  private List<JBAlbum> albums = null;
   
   private String letter;
-  private String artistId;
-  private String artistName;
   private boolean shouldRenderArtists =  true;
   
   @Inject
