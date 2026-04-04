@@ -23,7 +23,7 @@ import java.io.*;
 public class JBFilenameFilter implements FilenameFilter {
 
   //move to new table JB_SUPPORTED_TYPES ?
-  private final String[] fileTypes = {"mp3", "ogg"};
+  private final String[] fileTypes = {"mp3", "ogg", "flac"};
 
   public JBFilenameFilter() {
   }
