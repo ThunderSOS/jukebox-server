@@ -97,4 +97,18 @@ create table jb_users (
     PRIMARY KEY (user_id)
 );
 
+drop table if exists jukebox.jb_filetypes;
+
+create table jukebox.jb_filetypes  (
+	id serial NOT NULL, 
+	filetype varchar(4) NOT NULL,	
+	date_created timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (id)
+);
+
+insert into jb_filetypes (filetype) values ('mp3');
+insert into jb_filetypes (filetype) values ('ogg');
+insert into jb_filetypes (filetype) values ('flac');
+
 insert into jb_users (username, shared_folder) values ('chris', 'd:\mp3');
+
