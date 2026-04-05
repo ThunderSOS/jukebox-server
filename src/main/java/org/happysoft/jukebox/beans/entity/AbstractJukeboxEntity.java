@@ -1,5 +1,5 @@
 
-package org.happysoft.jukebox.beans.service.entity;
+package org.happysoft.jukebox.beans.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
@@ -14,26 +14,25 @@ import java.sql.Timestamp;
  */
 @MappedSuperclass
 public class AbstractJukeboxEntity {
-  
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id; 
-  
-  @Column (name = "date_created")
+  private Long id;
+
+  @Column(name = "date_created")
   @jakarta.json.bind.annotation.JsonbTransient
   private final Timestamp dateCreated;
-  
-  @Column (name = "found_on_last_load")
+
+  @Column(name = "found_on_last_load")
   private boolean foundOnLastLoad = false;
-      
+
   @Column(name = "owner_id")
   private Long ownerId;
-
 
   public AbstractJukeboxEntity() {
     dateCreated = new Timestamp(System.currentTimeMillis());
   }
-    
+
   public Long getId() {
     return id;
   }
@@ -41,11 +40,11 @@ public class AbstractJukeboxEntity {
   public void setId(Long id) {
     this.id = id;
   }
-  
+
   public final Timestamp getDateCreated() {
     return dateCreated;
   }
-  
+
   public final Long getOwnerId() {
     return ownerId;
   }
@@ -53,13 +52,13 @@ public class AbstractJukeboxEntity {
   public final void setOwnerId(Long ownerId) {
     this.ownerId = ownerId;
   }
-  
+
   public final boolean foundOnLastLoad() {
     return foundOnLastLoad;
   }
 
   public final void setFoundOnLastLoad(boolean foundOnLastLoad) {
     this.foundOnLastLoad = foundOnLastLoad;
-  }  
-  
+  }
+
 }

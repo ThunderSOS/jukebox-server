@@ -8,7 +8,7 @@ import jakarta.inject.Named;
 import java.io.Serializable;
 import java.util.List;
 import org.happysoft.jukebox.beans.service.SearchService;
-import org.happysoft.jukebox.beans.service.entity.JBTrack;
+import org.happysoft.jukebox.beans.entity.JBTrack;
 
 /**
  *
@@ -17,6 +17,8 @@ import org.happysoft.jukebox.beans.service.entity.JBTrack;
 @Named(value = "trackListBean")
 @ViewScoped
 public class TrackListBean implements Serializable {
+
+  private static final long serialVersionUID = 1L;
 
   @EJB
   private SearchService searchService;

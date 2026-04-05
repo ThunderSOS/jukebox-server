@@ -6,10 +6,10 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import java.io.Serializable;
 import java.util.List;
-import org.happysoft.jukebox.beans.service.entity.JBAlbum;
-import org.happysoft.jukebox.beans.service.entity.JBArtist;
+import org.happysoft.jukebox.beans.entity.JBAlbum;
+import org.happysoft.jukebox.beans.entity.JBArtist;
 import org.happysoft.jukebox.beans.service.SearchService;
-import org.happysoft.jukebox.beans.service.entity.JBTrack;
+import org.happysoft.jukebox.beans.entity.JBTrack;
 
 /**
  *
@@ -18,6 +18,8 @@ import org.happysoft.jukebox.beans.service.entity.JBTrack;
 @Named(value = "searchBean")
 @ViewScoped
 public class SearchBean implements Serializable {
+
+  private static final long serialVersionUID = 1L;
   
   @EJB
   private SearchService searchService;

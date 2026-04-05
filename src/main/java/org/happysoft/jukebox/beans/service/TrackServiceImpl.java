@@ -9,7 +9,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
-import org.happysoft.jukebox.beans.service.entity.JBTrack;
+import org.happysoft.jukebox.beans.entity.JBTrack;
 import org.happysoft.jukebox.model.RemoteDirectory;
 
 @Stateless

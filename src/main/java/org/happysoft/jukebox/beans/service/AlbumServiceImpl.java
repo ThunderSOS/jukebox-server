@@ -9,7 +9,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
-import org.happysoft.jukebox.beans.service.entity.JBAlbum;
+import org.happysoft.jukebox.beans.entity.JBAlbum;
 
 @Stateless
 public class AlbumServiceImpl implements AlbumService {

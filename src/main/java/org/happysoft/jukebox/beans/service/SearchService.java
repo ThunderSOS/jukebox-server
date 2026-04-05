@@ -2,9 +2,9 @@
 package org.happysoft.jukebox.beans.service;
 
 import java.util.List;
-import org.happysoft.jukebox.beans.service.entity.JBAlbum;
-import org.happysoft.jukebox.beans.service.entity.JBArtist;
-import org.happysoft.jukebox.beans.service.entity.JBTrack;
+import org.happysoft.jukebox.beans.entity.JBAlbum;
+import org.happysoft.jukebox.beans.entity.JBArtist;
+import org.happysoft.jukebox.beans.entity.JBTrack;
 
 /**
  *

@@ -1,5 +1,4 @@
-
-package org.happysoft.jukebox.beans.service.entity;
+package org.happysoft.jukebox.beans.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,41 +14,41 @@ import org.happysoft.jukebox.model.RemoteDirectory;
 @Entity
 @Table(name = "jb_tracks")
 @NamedQueries({
-  @NamedQuery(name = "track.findByOwnerArtistAlbumAndName", query="SELECT t FROM JBTrack t WHERE t.ownerId = :ownerId "
+  @NamedQuery(name = "track.findByOwnerArtistAlbumAndName", query = "SELECT t FROM JBTrack t WHERE t.ownerId = :ownerId "
           + "AND t.artistId = :artistId "
           + "AND t.albumId = :albumId "
           + "AND t.trackName = :trackName"),
-  @NamedQuery(name = "track.findTracksForAlbum", query="SELECT t FROM JBTrack t WHERE t.albumId = :albumId ORDER BY t.trackName"),
-  @NamedQuery(name = "track.findLooseTracksForArtist", query="SELECT t FROM JBTrack t WHERE t.albumId = 0 AND t.artistId = :artistId ORDER BY t.trackName"),
-  @NamedQuery(name = "track.findLooseTracks", query="SELECT t FROM JBTrack t WHERE t.albumId = 0 AND t.artistId = 0 ORDER BY t.trackName"),
-  @NamedQuery(name = "track.findById", query="SELECT t FROM JBTrack t WHERE t.id = :id"),
-  @NamedQuery(name = "track.countByOwner", query="SELECT COUNT(t) FROM JBTrack t WHERE t.ownerId = :ownerId"),  
-  @NamedQuery(name = "track.countNewByOwner", query="SELECT COUNT(t) FROM JBTrack t WHERE t.ownerId = :ownerId AND t.foundOnLastLoad = false")
+  @NamedQuery(name = "track.findTracksForAlbum", query = "SELECT t FROM JBTrack t WHERE t.albumId = :albumId ORDER BY t.trackName"),
+  @NamedQuery(name = "track.findLooseTracksForArtist", query = "SELECT t FROM JBTrack t WHERE t.albumId = 0 AND t.artistId = :artistId ORDER BY t.trackName"),
+  @NamedQuery(name = "track.findLooseTracks", query = "SELECT t FROM JBTrack t WHERE t.albumId = 0 AND t.artistId = 0 ORDER BY t.trackName"),
+  @NamedQuery(name = "track.findById", query = "SELECT t FROM JBTrack t WHERE t.id = :id"),
+  @NamedQuery(name = "track.countByOwner", query = "SELECT COUNT(t) FROM JBTrack t WHERE t.ownerId = :ownerId"),
+  @NamedQuery(name = "track.countNewByOwner", query = "SELECT COUNT(t) FROM JBTrack t WHERE t.ownerId = :ownerId AND t.foundOnLastLoad = false")
 })
 public class JBTrack extends AbstractJukeboxEntity {
 
   @Column(name = "artist_id")
   private Long artistId;
-  
+
   @Column(name = "album_id")
   private Long albumId;
-  
+
   @Column(name = "track_name")
-  private String trackName;  
-      
+  private String trackName;
+
   @Column(name = "shared_folder")
   private String sharedFolder;
 
-  public JBTrack() {    
+  public JBTrack() {
   }
-  
+
   public JBTrack(RemoteDirectory remote, long ownerId, long artistId, long albumId, String trackName) {
     this.albumId = albumId;
     this.artistId = artistId;
     this.trackName = trackName;
     this.sharedFolder = remote.toString();
     setOwnerId(ownerId);
-    setFoundOnLastLoad(false);    
+    setFoundOnLastLoad(false);
   }
 
   public Long getArtistId() {
@@ -75,7 +74,7 @@ public class JBTrack extends AbstractJukeboxEntity {
   public void setTrackName(String trackName) {
     this.trackName = trackName;
   }
-    
+
   public final String getSharedFolder() {
     return sharedFolder;
   }
@@ -83,5 +82,5 @@ public class JBTrack extends AbstractJukeboxEntity {
   public final void setSharedFolder(String sharedFolder) {
     this.sharedFolder = sharedFolder;
   }
-  
+
 }

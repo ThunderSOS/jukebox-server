@@ -1,5 +1,4 @@
-
-package org.happysoft.jukebox.beans.service.entity;
+package org.happysoft.jukebox.beans.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,30 +16,30 @@ import org.happysoft.jukebox.model.RequestStatus;
 @Entity
 @Table(name = "jb_requests")
 @NamedQueries({
-  @NamedQuery(name = "playlist.findPlaying", query="SELECT p FROM JBPlaylistRequest p WHERE p.status = 'PLAYING'"),
-  @NamedQuery(name = "playlist.findAllQueued", query="SELECT p FROM JBPlaylistRequest p WHERE p.status = 'QUEUED' ORDER BY p.dateCreated ASC"),
+  @NamedQuery(name = "playlist.findPlaying", query = "SELECT p FROM JBPlaylistRequest p WHERE p.status = 'PLAYING'"),
+  @NamedQuery(name = "playlist.findAllQueued", query = "SELECT p FROM JBPlaylistRequest p WHERE p.status = 'QUEUED' ORDER BY p.dateCreated ASC"),
 })
 public class JBPlaylistRequest {
-  
+
   @Id
   @Column(name = "request_id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long requestId; 
-    
+  private Long requestId;
+
   @Column(name = "track_id")
   private Long trackId;
-  
+
   @Enumerated(EnumType.STRING)
-  @Column (name = "status")
+  @Column(name = "status")
   private RequestStatus status;
 
   @Column(name = "requested_by")
   private Long requestedBy;
-  
-  @Column (name = "date_created")
+
+  @Column(name = "date_created")
   private final Timestamp dateCreated;
 
-  public JBPlaylistRequest() {  
+  public JBPlaylistRequest() {
     dateCreated = new Timestamp(System.currentTimeMillis());
   }
 
@@ -67,7 +66,7 @@ public class JBPlaylistRequest {
   public void setRequestedBy(Long requestedBy) {
     this.requestedBy = requestedBy;
   }
-  
+
   public final Timestamp getDateCreated() {
     return dateCreated;
   }
@@ -79,5 +78,5 @@ public class JBPlaylistRequest {
   public void setStatus(RequestStatus status) {
     this.status = status;
   }
-  
+
 }

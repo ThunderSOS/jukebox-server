@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.happysoft.jukebox.beans.service.PlaylistService;
 import org.happysoft.jukebox.beans.service.TrackService;
-import org.happysoft.jukebox.beans.service.entity.JBPlaylistRequest;
-import org.happysoft.jukebox.beans.service.entity.JBTrack;
+import org.happysoft.jukebox.beans.entity.JBPlaylistRequest;
+import org.happysoft.jukebox.beans.entity.JBTrack;
 import org.happysoft.jukebox.model.Request;
 import org.happysoft.jukebox.model.RequestStatus;
 

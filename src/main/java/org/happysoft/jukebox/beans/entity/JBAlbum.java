@@ -1,5 +1,5 @@
 
-package org.happysoft.jukebox.beans.service.entity;
+package org.happysoft.jukebox.beans.entity;
 
 /**
  *

@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.concurrent.Future;
 import org.happysoft.jukebox.beans.service.UserLoadService;
 import org.happysoft.jukebox.beans.service.UserService;
-import org.happysoft.jukebox.beans.service.entity.JBUser;
+import org.happysoft.jukebox.beans.entity.JBUser;
 
 /**
  *
@@ -17,6 +17,8 @@ import org.happysoft.jukebox.beans.service.entity.JBUser;
 @SessionScoped
 @Named(value = "sessionBean")
 public class UserSessionBean implements Serializable {
+
+  private static final long serialVersionUID = 1L;
 
   private Long ownerId;
   private String username;

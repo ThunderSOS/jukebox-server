@@ -13,8 +13,8 @@ import java.util.List;
 import org.happysoft.jukebox.beans.service.MessageService;
 import org.happysoft.jukebox.beans.service.PlaylistService;
 import org.happysoft.jukebox.beans.service.TrackService;
-import org.happysoft.jukebox.beans.service.entity.JBPlaylistRequest;
-import org.happysoft.jukebox.beans.service.entity.JBTrack;
+import org.happysoft.jukebox.beans.entity.JBPlaylistRequest;
+import org.happysoft.jukebox.beans.entity.JBTrack;
 import org.happysoft.jukebox.messaging.AddToQueueMessage;
 import org.happysoft.jukebox.messaging.PauseMessage;
 import org.happysoft.jukebox.messaging.PlayMessage;
@@ -29,6 +29,8 @@ import org.happysoft.jukebox.model.Request;
 @Named(value = "playlistBean")
 @ApplicationScoped
 public class PlaylistBean implements Serializable {
+
+  private static final long serialVersionUID = 1L;
 
   @EJB
   private PlaylistService playlistService;

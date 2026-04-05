@@ -1,6 +1,7 @@
 
 package org.happysoft.jukebox.beans.service;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.ejb.AsyncResult;
 import jakarta.ejb.Asynchronous;
 import jakarta.ejb.EJB;
@@ -14,12 +15,12 @@ import java.util.List;
 import java.util.concurrent.Future;
 import org.happysoft.jukebox.beans.LoadResult;
 import org.happysoft.jukebox.beans.LoadType;
-import org.happysoft.jukebox.beans.load.FileList;
-import org.happysoft.jukebox.beans.load.JBFilenameFilter;
-import org.happysoft.jukebox.beans.service.entity.JBAlbum;
-import org.happysoft.jukebox.beans.service.entity.JBArtist;
-import org.happysoft.jukebox.beans.service.entity.JBTrack;
-import org.happysoft.jukebox.beans.service.entity.JBUser;
+import org.happysoft.jukebox.file.FileList;
+import org.happysoft.jukebox.file.JBFilenameFilter;
+import org.happysoft.jukebox.beans.entity.JBAlbum;
+import org.happysoft.jukebox.beans.entity.JBArtist;
+import org.happysoft.jukebox.beans.entity.JBTrack;
+import org.happysoft.jukebox.beans.entity.JBUser;
 import org.happysoft.jukebox.model.RemoteDirectory;
 
 /**
@@ -28,11 +29,13 @@ import org.happysoft.jukebox.model.RemoteDirectory;
  */
 @Stateless
 public class UserLoadServiceImpl implements UserLoadService, Serializable {
+
+  private static final long serialVersionUID = 1L;
   
-  private final JBFilenameFilter filter = new JBFilenameFilter();
+  private JBFilenameFilter filter;
   
   // list of directories to exclude whilst scanning
-  private final List<String> exclude = new ArrayList<>();
+  private List<String> exclude;
 
   private volatile boolean loadInProgress = false;
 
@@ -52,10 +55,14 @@ public class UserLoadServiceImpl implements UserLoadService, Serializable {
 
   @EJB
   private TrackService trackService;
-
-  public UserLoadServiceImpl() {
-    exclude.add("incoming");
-    exclude.add("test");
+  
+  @EJB
+  private SupportedFileTypesService supportedFileTypesService;
+  
+  @PostConstruct
+  public void init() {
+    exclude = List.of("incoming", "test");   
+    filter = new JBFilenameFilter(supportedFileTypesService.getSupportedTypes());
   }
   
   @SessionScoped
@@ -90,7 +97,7 @@ public class UserLoadServiceImpl implements UserLoadService, Serializable {
   }
 
   private void loadAll() throws FileNotFoundException {
-    var fl = new FileList(remote, null, exclude);
+    var fl = new FileList(remote, null, exclude, filter);
 
     File[] unsortedTracks = fl.getLooseFiles();
     File[] directories = fl.getDirectories(); // should be artists
@@ -109,7 +116,7 @@ public class UserLoadServiceImpl implements UserLoadService, Serializable {
       JBArtist artist = artistService.findOrCreateArtist(ownerId, artistName);
       loadResult.incNumLoaded(LoadType.ARTIST);
 
-      FileList artistAlbums = new FileList(remote, artist.getArtistName(), exclude);
+      FileList artistAlbums = new FileList(remote, artist.getArtistName(), exclude, filter);
       File[] albumList = artistAlbums.getDirectories();
 
       List<JBTrack> albumTracks = loadAlbums(albumList, ownerId, artist);

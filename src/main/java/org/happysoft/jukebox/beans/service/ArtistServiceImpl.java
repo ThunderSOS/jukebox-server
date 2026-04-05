@@ -6,7 +6,7 @@ package org.happysoft.jukebox.beans.service;
  */
 import jakarta.ejb.Stateless;
 import jakarta.persistence.PersistenceContext;
-import org.happysoft.jukebox.beans.service.entity.JBArtist;
+import org.happysoft.jukebox.beans.entity.JBArtist;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;

@@ -1,6 +1,6 @@
 package org.happysoft.jukebox.beans.service;
 
-import org.happysoft.jukebox.beans.service.entity.JBArtist;
+import org.happysoft.jukebox.beans.entity.JBArtist;
 
 /**
  *
