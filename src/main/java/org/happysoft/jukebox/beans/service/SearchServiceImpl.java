@@ -68,5 +68,12 @@ public class SearchServiceImpl implements SearchService {
     System.out.println("Finding loose tracks");
     return em.createNamedQuery("track.findLooseTracks").getResultList();
   }
-
+    
+  @Override
+  @RequestScoped
+  public List<JBTrack> searchTracks(String search) {
+    System.out.println("Searching tracks");
+    return em.createNamedQuery("track.searchTracks").setParameter("search", search).getResultList();
+  }
+  
 }

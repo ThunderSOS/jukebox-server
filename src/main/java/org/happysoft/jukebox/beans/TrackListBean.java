@@ -35,7 +35,9 @@ public class TrackListBean implements Serializable {
   private String albumName;
   private String artistId;
   private String artistName;
+  private String lastSearch = "";
   private boolean shouldRenderTracks = false;
+  private boolean shouldRenderSearchResults = false;
 
   public void loadTracksByAlbumId() {
     FacesContext context = FacesContext.getCurrentInstance();
@@ -46,13 +48,15 @@ public class TrackListBean implements Serializable {
     tracks = searchService.findTracksForAlbum(Long.parseLong(albumId));
     artistBean.setShouldRenderArtists(false);
     albumBean.setShouldRenderAlbums(false);
+    shouldRenderSearchResults = false;
     shouldRenderTracks = true;
   }
-  
+
   public void loadLooseTracks() {
     tracks = searchService.findLooseTracks();
     artistBean.setShouldRenderArtists(false);
     albumBean.setShouldRenderAlbums(false);
+    shouldRenderSearchResults = false;
     shouldRenderTracks = true;
   }
 
@@ -67,6 +71,10 @@ public class TrackListBean implements Serializable {
   public String getAlbumName() {
     return albumName;
   }
+  
+  public String getLastSearch() {
+    return lastSearch;
+  }
 
   public boolean shouldRenderTracks() {
     return shouldRenderTracks;
@@ -74,6 +82,26 @@ public class TrackListBean implements Serializable {
 
   public void setShouldRenderTracks(boolean should) {
     this.shouldRenderTracks = should;
+  }
+  
+  public boolean shouldRenderSearchResults() {
+    return shouldRenderSearchResults;
+  }
+
+  public void setShouldRenderSearchResults(boolean should) {
+    this.shouldRenderSearchResults = should;
+  }
+
+  public void searchTracks() {
+    FacesContext context = FacesContext.getCurrentInstance();
+    String searchString = context.getExternalContext().getRequestParameterMap().get("searchForm:searchBox");
+    tracks = searchService.searchTracks(searchString);
+    System.out.println("Found " + tracks.size() + " tracks");
+    lastSearch = searchString;
+    artistBean.setShouldRenderArtists(false);
+    albumBean.setShouldRenderAlbums(false);
+    shouldRenderTracks = false;
+    shouldRenderSearchResults = true;
   }
 
   public void reloadAlbumList() {

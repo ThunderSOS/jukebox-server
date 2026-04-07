@@ -26,4 +26,6 @@ public interface SearchService {
   
   public List<JBTrack> findLooseTracks();
   
+  public List<JBTrack> searchTracks(String search);
+  
 }
