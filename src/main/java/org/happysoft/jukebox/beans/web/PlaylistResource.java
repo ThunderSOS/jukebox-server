@@ -49,10 +49,8 @@ public class PlaylistResource {
   @Path("/getQueue")
   @Produces(MediaType.APPLICATION_JSON)
   public Response getQueue() {
-    List<JBPlaylistRequest> queue = playlistService.getQueued();
-    
-    List<Request> reqs = new ArrayList<>();
-    
+    List<JBPlaylistRequest> queue = playlistService.getQueued();    
+    List<Request> reqs = new ArrayList<>();    
     for(JBPlaylistRequest req : queue) {
       JBTrack track = trackService.findById(req.getTrackId());
       reqs.add(playlistService.buildRequest(req.getRequestId(), track.getId()));
@@ -60,6 +58,4 @@ public class PlaylistResource {
     return Response.ok().entity(reqs).build();
   }
   
-  
-
 }
